@@ -2,15 +2,33 @@ fn main() {
     println!("Hello, world!");
     let mut player1 = Player {
         life: 20,
-        hand: Domain::new("HAND"),
-        library: Domain::new("LIBRARY"),
-        battlefield: Domain::new("BATTLEFIELD")
+        hand: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
+        library: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
+        battlefield: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
     };
     let mut player2 = Player {
         life: 30,
-        hand: Domain::new("HAND"),
-        library: Domain::new("LIBRARY"),
-        battlefield: Domain::new("BATTLEFIELD")
+        hand: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
+        library: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
+        battlefield: Domain {
+            name: DomainName::Hand,
+            cards: Vec::new(),
+        },
     };
     let mut game = Game {
         turn: 0,
@@ -23,27 +41,21 @@ fn main() {
 }
 
 #[derive(Debug)]
-struct Game<'a> {
+struct Game {
     turn: usize,
-    player: [Player<'a>; 2],
+    player: [Player; 2],
     // phase: Phase<'a>,
     active_player: usize,
     next_player: usize,
 }
 
 #[derive(Debug, Clone)]
-struct Board<'a> {
-    turn: usize,
-    player: [Player<'a>; 2],
-}
-
-#[derive(Debug, Clone)]
-struct Player<'a> {
+struct Player {
     life: usize,
-    hand: Domain<'a>,
-    library: Domain<'a>,
+    hand: Domain,
+    library: Domain,
     // graveyard: Domain,
-    battlefield: Domain<'a>,
+    battlefield: Domain,
     // waiting: Domain,
 }
 
@@ -53,18 +65,16 @@ trait Agent {
 }
 
 #[derive(Debug, Clone)]
-struct Domain<'a> {
-    name: &'a str,
+struct Domain {
+    name: DomainName,
     cards: Vec<Card>,
 }
 
-impl<'a> Domain<'a> {
-    fn new(name: &'a str) -> Self {
-        Domain {
-            name,
-            cards: Vec::new(),
-        }
-    }
+#[derive(Debug, Clone)]
+enum DomainName {
+    Hand,
+    Battlefield,
+    Library,
 }
 
 #[derive(Debug, Clone, Copy)]
@@ -80,21 +90,27 @@ struct Oracle {
     cost: usize,
 }
 
-#[derive(Debug, Clone)]
-struct Status<'a> {
-    turn: usize,
-    active_player: Player<'a>,
-    next_player: Player<'a>,
-    phase: Phase<'a>,
+#[derive(Debug, Clone, Copy)]
+struct Phase {
+    name: PhaseName,
+    step_belonged: Step,
 }
 
 #[derive(Debug, Clone, Copy)]
-struct Phase<'a> {
-    name: &'a str,
-    step_belonged: Step<'a>,
+enum PhaseName {
+    Draw,
+    Action,
+    Cleanup,
 }
 
 #[derive(Debug, Clone, Copy)]
-struct Step<'a> {
-    name: &'a str,
+struct Step {
+    name: StepName,
+}
+
+#[derive(Debug, Clone, Copy)]
+enum StepName {
+    Boot,
+    Main,
+    Pass
 }
