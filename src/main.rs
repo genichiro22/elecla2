@@ -13,33 +13,22 @@ fn main() {
         battlefield: Domain::new("BATTLEFIELD")
     };
     let mut game = Game {
-        status: Status {
-            turn: 0,
-            active_player: player1.clone(),
-            next_player: player2.clone(),
-            phase: Phase {
-                name: "BOOT",
-                step_belonged: Step {
-                    name: "BOOT"
-                }
-            }
-        },
-        board: Board {
-            turn: 0,
-            player: [player1.clone(), player2]
-        }
+        turn: 0,
+        player: [player1, player2],
+        active_player: 0,
+        next_player: 0,
     };
-    println!("{:?}",game.board.player[0].clone());
-    player1.life = 21;
-    println!("{:?}",game.board.player[0].clone());
-    player1.life = 21;
-    
+    println!("{:?}",game.player[0]);
+    println!("{:?}",game.player[1]);
 }
 
 #[derive(Debug)]
 struct Game<'a> {
-    status: Status<'a>,
-    board: Board<'a>,
+    turn: usize,
+    player: [Player<'a>; 2],
+    // phase: Phase<'a>,
+    active_player: usize,
+    next_player: usize,
 }
 
 #[derive(Debug, Clone)]
