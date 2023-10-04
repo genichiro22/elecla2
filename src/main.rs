@@ -95,6 +95,7 @@ fn main() {
     game.player[0].library.cards = deck1;
     game.player[1].library.cards = deck2;
     game.debug();
+    game.player[0].draw_a_card();
     game.pass_turn();
     game.debug();
     game.pass_turn();
@@ -136,6 +137,17 @@ struct Player {
     // graveyard: Domain,
     battlefield: Domain,
     // waiting: Domain,
+}
+impl Player {
+    fn draw_a_card(&mut self) {
+        let length = self.library.cards.len();
+        if length>0 {
+            let card = self.library.cards.remove(0);
+            self.hand.cards.push(card);    
+        } else {
+            println!("No card in your library.")
+        }
+    }
 }
 
 trait Agent {
