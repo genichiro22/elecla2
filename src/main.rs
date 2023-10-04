@@ -2,6 +2,7 @@ fn main() {
     println!("Hello, world!");
     let mut player1 = Player {
         life: 20,
+        local_turn: 0,
         hand: Domain {
             name: DomainName::Hand,
             cards: Vec::new(),
@@ -17,6 +18,7 @@ fn main() {
     };
     let mut player2 = Player {
         life: 30,
+        local_turn: 0,
         hand: Domain {
             name: DomainName::Hand,
             cards: Vec::new(),
@@ -34,13 +36,21 @@ fn main() {
         turn: 0,
         player: [player1, player2],
         active_player: 0,
-        next_player: 0,
+        next_player: 1,
     };
-    println!("{:?}",game.player[0]);
-    println!("{:?}",game.player[1]);
+    println!("{:?}", game.clone());
+    game.pass_turn();
+    println!("{:?}", game.clone());
+    game.pass_turn();
+    println!("{:?}", game.clone());
+    game.pass_turn();
 }
 
-#[derive(Debug)]
+fn turn_loop(mut _game: Game) {
+    _game.pass_turn();
+}
+
+#[derive(Debug, Clone)]
 struct Game {
     turn: usize,
     player: [Player; 2],
@@ -49,9 +59,19 @@ struct Game {
     next_player: usize,
 }
 
+impl Game {
+    fn pass_turn(&mut self) {
+        self.active_player = 1 - self.active_player;
+        self.next_player = 1 - self.next_player;
+        self.turn = self.turn + 1;
+        self.player[self.active_player].local_turn = self.player[self.active_player].local_turn + 1;
+    }
+}
+
 #[derive(Debug, Clone)]
 struct Player {
     life: usize,
+    local_turn: usize,
     hand: Domain,
     library: Domain,
     // graveyard: Domain,
@@ -70,7 +90,7 @@ struct Domain {
     cards: Vec<Card>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy)]
 enum DomainName {
     Hand,
     Battlefield,
