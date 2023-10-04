@@ -2,7 +2,7 @@ fn main() {
     println!("Hello, world!");
     let mut player1 = Player {
         life: 20,
-        local_turn: 0,
+        local_turn: 3,
         hand: Domain {
             name: DomainName::Hand,
             cards: Vec::new(),
@@ -15,10 +15,11 @@ fn main() {
             name: DomainName::Battlefield,
             cards: Vec::new(),
         },
+        mana: 3,
     };
     let mut player2 = Player {
         life: 30,
-        local_turn: 0,
+        local_turn: 3,
         hand: Domain {
             name: DomainName::Hand,
             cards: Vec::new(),
@@ -31,6 +32,7 @@ fn main() {
             name: DomainName::Battlefield,
             cards: Vec::new(),
         },
+        mana: 3,
     };
     let oracle1 = Oracle {
         id: 1,
@@ -101,17 +103,14 @@ fn main() {
     game.player[0].library.cards = deck1;
     game.player[1].library.cards = deck2;
     game.debug();
-    game.player[0].draw_a_card();
-    game.player[0].draw_a_card();
-    game.player[0].draw_a_card();
-    game.player[0].draw_a_card();
-    game.player[0].draw_a_card();
-    game.player[0].draw_a_card();
-    game.pass_turn();
+    game.begin_turn();
     game.debug();
     game.pass_turn();
+    game.begin_turn();
     game.debug();
     game.pass_turn();
+    game.begin_turn();
+    game.debug();
 }
 
 fn turn_loop(mut game: Game) {
@@ -135,7 +134,12 @@ impl Game {
         self.player[self.active_player].local_turn = self.player[self.active_player].local_turn + 1;
     }
     fn debug(&mut self) {
-        println!("{:#?}", self);
+        println!("{:?}", self);
+    }
+    fn begin_turn(&mut self) {
+        let ap = self.active_player;
+        self.player[ap].mana = self.player[ap].local_turn;
+        self.player[ap].draw_a_card();
     }
 }
 
@@ -143,6 +147,7 @@ impl Game {
 struct Player {
     life: usize,
     local_turn: usize,
+    mana: usize,
     hand: Domain,
     library: Domain,
     // graveyard: Domain,
