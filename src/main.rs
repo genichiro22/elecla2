@@ -8,11 +8,11 @@ fn main() {
             cards: Vec::new(),
         },
         library: Domain {
-            name: DomainName::Hand,
+            name: DomainName::Library,
             cards: Vec::new(),
         },
         battlefield: Domain {
-            name: DomainName::Hand,
+            name: DomainName::Battlefield,
             cards: Vec::new(),
         },
     };
@@ -24,11 +24,11 @@ fn main() {
             cards: Vec::new(),
         },
         library: Domain {
-            name: DomainName::Hand,
+            name: DomainName::Library,
             cards: Vec::new(),
         },
         battlefield: Domain {
-            name: DomainName::Hand,
+            name: DomainName::Battlefield,
             cards: Vec::new(),
         },
     };
@@ -38,16 +38,72 @@ fn main() {
         active_player: 0,
         next_player: 1,
     };
-    println!("{:?}", game.clone());
+    let oracle1 = Oracle {
+        id: 1,
+        cost: 3
+    };
+    let oracle2 = Oracle {
+        id: 2,
+        cost: 5
+    };
+    let oracle3 = Oracle {
+        id: 3,
+        cost: 6
+    };
+    let card1 = Card {
+        id: 1,
+        oracle: oracle1
+    };
+    let card2 = Card {
+        id: 2,
+        oracle: oracle1
+    };
+    let card3 = Card {
+        id: 3,
+        oracle: oracle1
+    };
+    let card4 = Card {
+        id: 4,
+        oracle: oracle2
+    };
+    let card5 = Card {
+        id: 5,
+        oracle: oracle2
+    };
+    let card6 = Card {
+        id: 6,
+        oracle: oracle3
+    };
+    let card7 = Card {
+        id: 7,
+        oracle: oracle1
+    };
+    let card8 = Card {
+        id: 8,
+        oracle: oracle2
+    };
+    let card9 = Card {
+        id: 9,
+        oracle: oracle2
+    };
+    let card10 = Card {
+        id: 10,
+        oracle: oracle3
+    };
+    let deck1 = vec![card1, card2, card3, card4, card5];
+    let deck2 = vec![card6, card7, card8, card9, card10];
+    game.player[0].library.cards = deck1;
+    game.player[1].library.cards = deck2;
+    game.debug();
     game.pass_turn();
-    println!("{:?}", game.clone());
+    game.debug();
     game.pass_turn();
-    println!("{:?}", game.clone());
+    game.debug();
     game.pass_turn();
 }
 
-fn turn_loop(mut _game: Game) {
-    _game.pass_turn();
+fn turn_loop(mut game: Game) {
+    game.pass_turn();
 }
 
 #[derive(Debug, Clone)]
@@ -65,6 +121,9 @@ impl Game {
         self.next_player = 1 - self.next_player;
         self.turn = self.turn + 1;
         self.player[self.active_player].local_turn = self.player[self.active_player].local_turn + 1;
+    }
+    fn debug(&mut self) {
+        println!("{:#?}", self);
     }
 }
 
