@@ -32,12 +32,6 @@ fn main() {
             cards: Vec::new(),
         },
     };
-    let mut game = Game {
-        turn: 0,
-        player: [player1, player2],
-        active_player: 0,
-        next_player: 1,
-    };
     let oracle1 = Oracle {
         id: 1,
         cost: 3
@@ -92,9 +86,26 @@ fn main() {
     };
     let deck1 = vec![card1, card2, card3, card4, card5];
     let deck2 = vec![card6, card7, card8, card9, card10];
+    let mut game = Game {
+        turn: 0,
+        player: [player1, player2],
+        active_player: 0,
+        next_player: 1,
+        // phase: Phase {
+        //     name: PhaseName::Begin,
+        //     step_belonged: Step {
+        //         name: StepName::Main
+        //     }
+        // }
+    };
     game.player[0].library.cards = deck1;
     game.player[1].library.cards = deck2;
     game.debug();
+    game.player[0].draw_a_card();
+    game.player[0].draw_a_card();
+    game.player[0].draw_a_card();
+    game.player[0].draw_a_card();
+    game.player[0].draw_a_card();
     game.player[0].draw_a_card();
     game.pass_turn();
     game.debug();
@@ -111,7 +122,7 @@ fn turn_loop(mut game: Game) {
 struct Game {
     turn: usize,
     player: [Player; 2],
-    // phase: Phase<'a>,
+    // phase: Phase,
     active_player: usize,
     next_player: usize,
 }
@@ -186,12 +197,17 @@ struct Phase {
     name: PhaseName,
     step_belonged: Step,
 }
+impl Phase {
+    fn pass(&mut self) {}
+}
 
 #[derive(Debug, Clone, Copy)]
 enum PhaseName {
+    Begin,
     Draw,
     Action,
     Cleanup,
+    End,
 }
 
 #[derive(Debug, Clone, Copy)]
