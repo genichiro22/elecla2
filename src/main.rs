@@ -15,7 +15,7 @@ fn main() {
             name: DomainName::Battlefield,
             cards: Vec::new(),
         },
-        mana: 3,
+                mana: 3,
     };
     let mut player2 = Player {
         life: 30,
@@ -32,7 +32,7 @@ fn main() {
             name: DomainName::Battlefield,
             cards: Vec::new(),
         },
-        mana: 3,
+                mana: 3,
     };
     let oracle1 = Oracle {
         id: 1,
@@ -105,6 +105,8 @@ fn main() {
     game.debug();
     game.begin_turn();
     game.debug();
+    game.player[0].play_card(0);
+    game.debug();
     game.pass_turn();
     game.begin_turn();
     game.debug();
@@ -153,7 +155,7 @@ struct Player {
     // graveyard: Domain,
     battlefield: Domain,
     // waiting: Domain,
-}
+    }
 impl Player {
     fn draw_a_card(&mut self) {
         let length = self.library.cards.len();
@@ -163,6 +165,10 @@ impl Player {
         } else {
             println!("No card in your library.")
         }
+    }
+    fn play_card(&mut self, i:usize) {
+        let card = self.hand.cards.remove(i);
+        self.battlefield.cards.push(card);
     }
 }
 
