@@ -103,20 +103,10 @@ fn main() {
     game.player[0].library.cards = deck1;
     game.player[1].library.cards = deck2;
     game.debug();
-    game.begin_turn();
+    game.turn_loop();
     game.debug();
-    game.player[0].play_card(0);
+    game.turn_loop();
     game.debug();
-    game.pass_turn();
-    game.begin_turn();
-    game.debug();
-    game.pass_turn();
-    game.begin_turn();
-    game.debug();
-}
-
-fn turn_loop(mut game: Game) {
-    game.pass_turn();
 }
 
 #[derive(Debug, Clone)]
@@ -142,6 +132,10 @@ impl Game {
         let ap = self.active_player;
         self.player[ap].mana = self.player[ap].local_turn;
         self.player[ap].draw_a_card();
+    }
+    fn turn_loop(&mut self) {
+        self.begin_turn();
+        self.pass_turn();
     }
 }
 
