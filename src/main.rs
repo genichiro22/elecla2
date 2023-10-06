@@ -1,3 +1,5 @@
+use std::io::{self, Write};
+
 fn main() {
     println!("Hello, world!");
     let mut player1 = Player {
@@ -105,8 +107,6 @@ fn main() {
     game.debug();
     game.turn_loop();
     game.debug();
-    game.turn_loop();
-    game.debug();
 }
 
 #[derive(Debug, Clone)]
@@ -134,7 +134,9 @@ impl Game {
         self.player[ap].draw_a_card();
     }
     fn turn_loop(&mut self) {
+        let ap = self.active_player;
         self.begin_turn();
+        self.player[ap].play_card(0);
         self.pass_turn();
     }
 }
@@ -162,7 +164,12 @@ impl Player {
     }
     fn play_card(&mut self, i:usize) {
         let card = self.hand.cards.remove(i);
+        let cost = card.oracle.cost;
+        self.mana = self.mana - cost;
         self.battlefield.cards.push(card);
+    }
+    fn attack(&mut self, i:usize) {
+        println!("Attacked with card {}", i)
     }
 }
 
