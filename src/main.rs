@@ -1,5 +1,3 @@
-use std::io::{self, Write};
-
 fn main() {
     println!("Hello, world!");
     let mut player1 = Player {
@@ -104,9 +102,17 @@ fn main() {
     };
     game.player[0].library.cards = deck1;
     game.player[1].library.cards = deck2;
-    game.debug();
+    // game.debug();
     game.turn_loop();
-    game.debug();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    game.turn_loop();
+    // game.debug();
 }
 
 #[derive(Debug, Clone)]
@@ -135,9 +141,41 @@ impl Game {
     }
     fn turn_loop(&mut self) {
         let ap = self.active_player;
+        self.render();
         self.begin_turn();
-        self.player[ap].play_card(0);
+        let c: usize = self.player[ap].hand.cards[0].oracle.cost;
+        if c <= self.player[ap].mana {
+            self.player[ap].play_card(0);
+        }
         self.pass_turn();
+        self.render();
+    }
+    fn render(&mut self) {
+        println!("Turn: {}", self.turn);
+        println!("Active Player: Player {}", self.active_player);
+        println!("Next Player: Player {}", self.next_player);
+    
+        for (i, player) in self.player.iter().enumerate() {
+            println!("\nPlayer {} Status:", i);
+            println!("  Life: {}", player.life);
+            println!("  Local Turn: {}", player.local_turn);
+            println!("  Mana: {}", player.mana);
+    
+            println!("  Hand:");
+            for (j, card) in player.hand.cards.iter().enumerate() {
+                println!("    Card {}: Cost {}", j, card.oracle.cost);
+            }
+    
+            println!("  Battlefield:");
+            for (j, card) in player.battlefield.cards.iter().enumerate() {
+                println!("    Card {}: Cost {}", j, card.oracle.cost);
+            }
+    
+            // println!("  Library:");
+            // for (j, card) in player.library.cards.iter().enumerate() {
+            //     println!("    Card {}: Cost {}", j, card.oracle.cost);
+            // }
+        }
     }
 }
 
